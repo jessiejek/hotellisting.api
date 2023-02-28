@@ -1,6 +1,7 @@
 using hotellisting.api.Configurations;
 using hotellisting.api.Contracts;
 using hotellisting.api.Data;
+using hotellisting.api.Repository;
 using HotelListing.API.Repository;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -29,6 +30,7 @@ builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<IHotelsRepository, HotelsRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

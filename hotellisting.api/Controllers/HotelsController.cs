@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using hotellisting.api.Contracts;
+using hotellisting.api.Data;
+using hotellisting.api.Models.Hotel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using hotellisting.api.Data;
-using hotellisting.api.Contracts;
-using AutoMapper;
-using hotellisting.api.Models.Hotel;
 
 namespace hotellisting.api.Controllers
 {
@@ -31,7 +27,7 @@ namespace hotellisting.api.Controllers
         public async Task<ActionResult<IEnumerable<HotelDto>>> GetHotels()
         {
 
-            var hotels =  await _hotelsRepository.GetAllAsync();
+            var hotels = await _hotelsRepository.GetAllAsync();
             return Ok(_mapper.Map<List<HotelDto>>(hotels));
         }
 
@@ -52,6 +48,7 @@ namespace hotellisting.api.Controllers
         // PUT: api/Hotels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutHotel(int id, HotelDto hotelDto)
         {
             if (id != hotelDto.Id)
@@ -64,7 +61,7 @@ namespace hotellisting.api.Controllers
             {
                 return NotFound();
             }
-           _mapper.Map(hotelDto, hotel);
+            _mapper.Map(hotelDto, hotel);
 
             try
             {
@@ -88,6 +85,7 @@ namespace hotellisting.api.Controllers
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<Hotel>> PostHotel(CreateHotelDto hotelDto)
         {
             var hotel = _mapper.Map<Hotel>(hotelDto);
@@ -103,6 +101,7 @@ namespace hotellisting.api.Controllers
 
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteHotel(int id)
         {
             var hotel = await _hotelsRepository.GetAsync(id);
@@ -111,7 +110,7 @@ namespace hotellisting.api.Controllers
                 return NotFound();
             }
 
-           await  _hotelsRepository.DeleteAsync(id);
+            await _hotelsRepository.DeleteAsync(id);
 
             return NoContent();
         }
